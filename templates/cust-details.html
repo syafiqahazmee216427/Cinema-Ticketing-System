@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap">
+    <style>
+        /* Navbar styling */
+        .navbar-custom {
+            background: #2c2c2c; /* Solid dark background */
+            color: #bfa980 !important;
+            font-family: 'Playfair Display', serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #bfa980 !important;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #fff !important; /* White on hover */
+        }
+
+        /* Body and container styling */
+        body {
+            background-color: #F0E3DF;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            padding-top: 30px;
+        }
+
+        .container {
+            margin-top: 40px;
+            margin-bottom: 60px;
+        }
+
+        /* Form container styling */
+        .form-container {
+            margin-top: 100px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            background-color: #6A605C;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-container h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #bfa980; /* Gold color */
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .form-group label {
+            font-size: 1.2em;
+            color: #bfa980; /* Gold color */
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            border: 1px solid #bfa980; /* Gold border */
+            border-radius: 5px;
+            background-color: #2c2c2c; /* Dark background to match theme */
+            color: #bfa980; /* Gold text */
+        }
+
+        .btn-custom {
+            background-color: #bfa980; /* Gold color */
+            color: #2c2c2c; /* Dark text color */
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-custom:hover {
+            background-color: #9b7a4e; /* Darker gold color on hover */
+            color: #2c2c2c;
+        }
+
+        /* Price display styling */
+        .price-display {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* Footer styling */
+        .footer {
+            font-family: 'Playfair Display', serif;
+            background-color: #2c2c2c;
+            color: #bfa980;
+            padding: 10px;
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <a class="navbar-brand" href="#">BSS Cinema</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/movies">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/contact">Contact Us</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Form Section -->
+<div class="container form-container">
+    <h2>Enter Your Details</h2>
+    <form th:action="@{/tickets/book}" method="post">
+        <!-- Include movieId as a hidden input field -->
+        <input type="hidden" name="movieId" th:value="${movieId}">
+
+        <!-- Hidden inputs for date and showtime -->
+        <input type="hidden" name="date" th:value="${date}">
+        <input type="hidden" name="showtime" th:value="${showtime}">
+
+        <!-- Hidden inputs for selected seats -->
+        <div th:each="seat : ${seatNumber}">
+            <input type="hidden" name="seatNumber" th:value="${seat}">
+        </div>
+
+        <div class="form-group">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <!-- Displaying the total price -->
+        <div id="price-display" class="price-display">
+            Total Price: RM <span th:text="${totalPrice}">0</span>
+        </div>
+        <!-- Payment Type Selection Dropdown -->
+        <div class="form-group">
+            <label for="paymentType">Payment Type:</label>
+            <select id="paymentType" name="paymentType" required>
+                <option selected disabled>Select Payment Type</option>
+                <option value="Tng">Touch 'n Go</option>
+                <option value="Grab">Grab</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="Credit Card">Credit Card</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-custom">Confirm Booking</button>
+    </form>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; 2024 BSS Cinema. All rights reserved.</p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+
+</body>
+</html>

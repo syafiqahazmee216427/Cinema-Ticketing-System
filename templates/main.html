@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSS CINEMA</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap">
+    <style>
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Set background image */
+            background-image: url('/cinemacover.jpg');
+            /* Adjust background properties */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        /* Container styling */
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        /* Welcome styling */
+        .welcome {
+            margin-bottom: 5px;
+            font-size: 5em; /* Adjust font size here */
+            color: antiquewhite;
+            font-family: 'Playfair Display', serif; /* Use Google Font */
+            text-shadow: 2px 2px 10px rgba(128, 128, 128, 0.7);
+        }
+        /* Phrase styling */
+        .phrase {
+            font-size: 1.3em;
+            color: lightgoldenrodyellow;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        /* Button container styling */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Button styling */
+        .btn {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: lightgoldenrodyellow;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="welcome">Welcome to BSS Cinema</div>
+    <div class="phrase">Come and Experience Movies Like Never Before!</div>
+    <div class="btn-container">
+        <a href="/movies" class="btn">Continue</a>
+    </div>
+</div>
+
+</body>
+</html>

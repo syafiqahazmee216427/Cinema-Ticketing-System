@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Seating Selection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .navbar-custom {
+            background: #2c2c2c;
+            color: #bfa980 !important;
+            font-family: 'Playfair Display', serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #bfa980 !important;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #fff !important;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-size: cover;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #F0E3DF;
+            padding-top: 70px;
+        }
+
+        .container {
+            position: relative;
+            text-align: center;
+            background-color: #6A605C;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: auto; /* Ensures that the container does not push the footer down */
+        }
+
+        .screen {
+            background-color: lightgray;
+            padding: 5px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .seats {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .seat {
+            width: 30px;
+            height: 30px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border: 2px solid #333;
+            background-color: #444;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .seat.selected {
+            background-color: #bfa980;
+        }
+
+        .seat.occupied {
+            background-color: #ccc; /* Gray out occupied seats */
+            cursor: not-allowed; /* Disable cursor for occupied seats */
+        }
+
+        .seat:nth-of-type(2) {
+            margin-right: 30px;
+        }
+
+        .seat:nth-last-of-type(2) {
+            margin-left: 30px;
+        }
+
+        .showcase .seat:not(.occupied):hover {
+            cursor: default;
+            transform: scale(1);
+        }
+
+        .showcase {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #777;
+            list-style-type: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .showcase li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+
+        .showcase li small {
+            margin-left: 2px;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .btn-primary {
+            background-color: #bfa980;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            vertical-align: middle;
+        }
+
+        .btn-secondary {
+            background-color: #2c2c2c;
+            border: none;
+            color: #bfa980;
+            padding: 10px 20px;
+            border-radius: 5px;
+            vertical-align: middle;
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            opacity: 0.8;
+        }
+
+        /* Footer styling */
+        .footer {
+            font-family: 'Playfair Display', serif;
+            background-color: #2c2c2c;
+            color: #bfa980;
+            padding: 10px;
+            text-align: center;
+            margin-top: 40px;
+            width: 100%;
+            bottom: 0; /* Align it to the bottom of the page */
+            left: 0; /* Align it to the left edge */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <a class="navbar-brand" href="#">BSS Cinema</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/movies">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/contact">Contact Us</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<ul class="showcase">
+    <li>
+        <div class="seat"></div>
+        <small>N/A</small>
+    </li>
+    <li>
+        <div class="seat selected"></div>
+        <small>Selected</small>
+    </li>
+    <li>
+        <div class="seat occupied"></div>
+        <small>Occupied</small>
+    </li>
+</ul>
+
+<div class="container">
+    <h4>SEAT SELECTION</h4>
+    <form id="seatSelectionForm" th:action="@{/movies/{id}/cust-details(id=${movieId})}" method="post">
+        <input type="hidden" id="date" name="date" th:value="${date}">
+        <input type="hidden" id="showtime" name="showtime" th:value="${showtime}">
+        <input type="hidden" id="selectedSeats" name="selectedSeats">
+        <div class="screen">SCREEN</div>
+        <div class="seats">
+            <div class="row">
+                <!-- Replace seat IDs and class attribute dynamically -->
+                <div th:each="seatId : ${#numbers.sequence(1, 10)}" th:class="${#lists.contains(occupiedSeats, 'A' + seatId) ? 'seat occupied' : 'seat'}" th:id="'A' + ${seatId}"></div>
+            </div>
+            <div class="row">
+                <div th:each="seatId : ${#numbers.sequence(1, 10)}" th:class="${#lists.contains(occupiedSeats, 'B' + seatId) ? 'seat occupied' : 'seat'}" th:id="'B' + ${seatId}"></div>
+            </div>
+            <div class="row">
+                <div th:each="seatId : ${#numbers.sequence(1, 10)}" th:class="${#lists.contains(occupiedSeats, 'C' + seatId) ? 'seat occupied' : 'seat'}" th:id="'C' + ${seatId}"></div>
+            </div>
+            <div class="row">
+                <div th:each="seatId : ${#numbers.sequence(1, 10)}" th:class="${#lists.contains(occupiedSeats, 'D' + seatId) ? 'seat occupied' : 'seat'}" th:id="'D' + ${seatId}"></div>
+            </div>
+            <div class="row">
+                <div th:each="seatId : ${#numbers.sequence(1, 10)}" th:class="${#lists.contains(occupiedSeats, 'E' + seatId) ? 'seat occupied' : 'seat'}" th:id="'E' + ${seatId}"></div>
+            </div>
+            <div class="row">
+                <div th:each="seatId : ${#numbers.sequence(1, 10)}" th:class="${#lists.contains(occupiedSeats, 'F' + seatId) ? 'seat occupied' : 'seat'}" th:id="'F' + ${seatId}"></div>
+            </div>
+            <div class="row">
+                <div th:each="seatId : ${#numbers.sequence(1, 10)}" th:class="${#lists.contains(occupiedSeats, 'G' + seatId) ? 'seat occupied' : 'seat'}" th:id="'G' + ${seatId}"></div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Proceed</button>
+        <a href="/movies" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; 2024 BSS Cinema. All rights reserved.</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const seats = document.querySelectorAll('.row .seat:not(.occupied)');
+        const seatSelectionForm = document.getElementById('seatSelectionForm');
+        const selectedSeatsInput = document.getElementById('selectedSeats');
+
+        let selectedSeats = [];
+
+        console.log('Seats found:', seats.length); // Check if seats are found
+
+        seats.forEach(seat => {
+            seat.addEventListener('click', () => {
+                console.log('Seat clicked:', seat.id); // Log each seat click
+                seat.classList.toggle('selected');
+                updateSelectedSeats();
+            });
+        });
+
+        function updateSelectedSeats() {
+            selectedSeats = document.querySelectorAll('.row .seat.selected');
+            console.log('Selected seats:', selectedSeats.length); // Log selected seats count
+
+            // Update the hidden input with selected seats' IDs
+            selectedSeatsInput.value = [...selectedSeats].map(seat => seat.id).join(',');
+        }
+
+        seatSelectionForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent the default form submission
+            updateSelectedSeats(); // Ensure inputs are updated
+
+            console.log('Form submitting with seats:', selectedSeatsInput.value);
+
+            if (selectedSeats.length === 0) {
+                alert('Please select at least one seat.');
+                return; // Prevent form submission if no seats are selected
+            }
+
+            alert(`You have selected seats: ${selectedSeatsInput.value}`);
+
+            seatSelectionForm.submit(); // Now, submit the form
+        });
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

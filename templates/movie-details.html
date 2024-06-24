@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${movie.movieName}">Movie Details</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        /* Navbar styling */
+        .navbar-custom {
+            background: #2c2c2c; /* Solid dark background */
+            color: #bfa980 !important;
+            font-family: 'Playfair Display', serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #bfa980 !important;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #fff !important; /* White on hover */
+        }
+
+        /* Body and container styling */
+        body {
+            background-color: #F0E3DF;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            padding-top: 50px;
+        }
+
+        .container {
+            margin-top: 40px;
+            margin-bottom: 60px;
+        }
+
+        /* Movie details card */
+        .card {
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            background-color: #6A605C;
+            border-radius: 15px;
+        }
+
+        .card-body {
+            padding: 30px;
+            text-align: center; /* Center-align content inside the card */
+        }
+
+        .card-title {
+            color: #bfa980;
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Movie poster */
+        .movie-poster {
+            margin: 0 auto 20px; /* Center the image horizontally */
+            max-width: 150px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Form styling */
+        form {
+            margin-top: 20px;
+            text-align: left; /* Align form content to the left */
+        }
+
+        label {
+            color: #bfa980;
+            font-weight: bold;
+        }
+
+        .form-control {
+            background-color: #2c2c2c;
+            color: #bfa980;
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #bfa980;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            vertical-align: middle; /* Align buttons vertically in the middle */
+        }
+
+        .btn-secondary {
+            background-color: #2c2c2c;
+            border: none;
+            color: #bfa980;
+            padding: 10px 20px;
+            border-radius: 5px;
+            vertical-align: middle; /* Align buttons vertically in the middle */
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            opacity: 0.8;
+        }
+
+        /* Footer styling */
+        .footer {
+            font-family: 'Playfair Display', serif;
+            background-color: #2c2c2c;
+            color: #bfa980;
+            padding: 10px;
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <a class="navbar-brand" href="#">BSS Cinema</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/movies">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/contact">Contact Us</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <!-- Movie Poster -->
+            <img th:src="@{'/images/' + ${movie.movieId} + '.jpg'}" alt="Movie Poster" class="movie-poster">
+            <h5 class="card-title" th:text="${movie.movieName}">Movie Name</h5>
+            <p class="card-text">
+                <strong>Genre:</strong> <span th:text="${movie.genre}">Genre</span><br>
+                <strong>Duration:</strong>
+                <span th:text="${(movie.duration / 60) + ' hrs ' + (movie.duration % 60) + ' mins'}"></span>
+            </p>
+            <form th:action="@{/movies/{id}/select-seats(id=${movie.movieId})}" method="post">
+                <div class="form-group">
+                    <label for="date">Pick a Date</label>
+                    <select id="date" name="date" class="form-control" required>
+                        <option value="" disabled selected>Select a date</option>
+                        <option th:each="date : ${availableDates}" th:text="${date}" th:value="${date}">Date</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="showtime">Pick a Showtime</label>
+                    <select id="showtime" name="showtime" class="form-control" required>
+                        <option value="" disabled selected>Select a showtime</option>
+                        <option th:each="time : ${availableShowtimes}" th:text="${time}" th:value="${time}">Showtime</option>
+                    </select>
+                </div>
+
+                <!-- Center-aligned button container -->
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Select Seats</button>
+                    <a href="/movies" class="btn btn-secondary ml-2">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; 2024 BSS Cinema. All rights reserved.</p>
+</footer>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
